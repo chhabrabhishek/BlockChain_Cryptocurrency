@@ -7,13 +7,17 @@ describe('Block', () => {
     const lastHash = 'foo-lastHash';
     const hash = 'foo-hash';
     const data = ['blockchain','data'];
-    const block = new Block({timeStamp, lastHash, hash, data});
+    const nonce = 1;
+    const difficulty = 1;
+    const block = new Block({timeStamp, lastHash, hash, data, nonce, difficulty});
 
-    it('has a timestamp, lastHash, hash and data property',() => {
+    it('has a timestamp, lastHash, hash, difficulty, nonce and data property',() => {
         expect(block.timeStamp).toEqual(timeStamp);
         expect(block.lastHash).toEqual(lastHash);
         expect(block.hash).toEqual(hash);
         expect(block.data).toEqual(data);
+        expect(block.nonce).toEqual(nonce);
+        expect(block.difficulty).toEqual(difficulty);
     });
 
     describe('genesis()', () => {
@@ -50,8 +54,21 @@ describe('Block', () => {
         });
 
         it('checks the crypto hash value to be equal', () => {
-            expect(minedBlock.hash).toEqual(cryptoHash(minedBlock.timeStamp, data, minedBlock.lastHash))
+            expect(minedBlock.hash)
+                .toEqual(cryptoHash(
+                    minedBlock.timeStamp,
+                    data, 
+                    minedBlock.lastHash, 
+                    minedBlock.nonce, 
+                    minedBlock.difficulty
+                    )
+                );
         });
+
+        it('sets a `hash` that matches the difficulty criteria', () => {
+            expect(minedBlock.hash.substring(0, minedBlock.difficulty))
+                .toEqual('0'.repeat(minedBlock.difficulty));
+        })
     });
 
 });
