@@ -29,6 +29,17 @@ class BlockChain{
         
         return true;
     }
+
+    replaceChain(newChain){
+        if(newChain.length <= this.chain.length){
+            return;
+        }
+        if(!BlockChain.isValidChain(newChain)){
+            return;
+        }
+        this.chain = newChain;
+    }
+    
 }
 
 module.exports = BlockChain;
